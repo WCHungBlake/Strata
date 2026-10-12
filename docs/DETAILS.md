@@ -1054,6 +1054,28 @@ print(r.choices[0].message.content)
   `ANTHROPIC_MODEL` to a Claude model name it knows (it refuses names it doesn't; Strata ignores the name), plus any
   `ANTHROPIC_AUTH_TOKEN` (or your `api_key`, if you set one).
 - **Codex CLI** (0.1.39): see [the Responses API](#the-responses-api-and-codex-cli) below.
+- **ACP-capable editors via acp-bridge:** [acp-bridge](https://github.com/BlakeHung/acp-bridge) is
+  a small static Rust binary that turns any OpenAI-compatible backend into an ACP (Agent Client Protocol) agent — the
+  protocol Zed and JetBrains speak to coding agents. Point it at Strata and the model shows up inside those editors.
+  For the full install-to-Zed walkthrough, see
+  [Strata: Run a 125B Model on Your Own PC — from Install to Coding Agent](https://wchung.tw/blog/strata-local-125b).
+
+  acp-bridge detects OpenAI-compatible mode from the `/v1` URL. Its `config.toml` uses TOML:
+
+  ```toml
+  # acp-bridge config.toml
+  [llm]
+  base_url = "http://127.0.0.1:8080/v1"
+  model = "strata"        # or the model ID from /v1/models
+  api_key = "strata-local-key"
+  timeout_secs = 1800
+  ```
+
+  Register the binary in Zed's `agent_servers` setting. acp-bridge keeps the token traffic local and was integrated
+  with thinking-mode Qwen in mind: its 0.9.2 release recovers tool calls that thinking models sometimes embed in the
+  content channel instead of the structured `tool_calls` field, which is exactly the shape Qwen3.8 through
+  OpenAI-compatible surfaces can produce. An end-to-end compatibility suite for both output shapes runs in the
+  acp-bridge repo (see `tests/strata_compat.rs`).
 - **Context.** Chosen in setup (8K-262K). Requests longer than that are refused, never silently cut. A request whose
   `max_tokens` would run past the context is answered with `max_tokens` shortened to the room left (agents such as
   Claude Code ask for 32,000 on every request); the thinking budget follows the shortened cap. For the strict llama.cpp

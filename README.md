@@ -262,6 +262,7 @@ and the repository rules are in [AGENTS.md](AGENTS.md).
 | OpenAI-compatible (most apps and agents) | `http://127.0.0.1:8080/v1` (any API key, any model name) |
 | Anthropic API (Claude Code and others) | `http://127.0.0.1:8080`, without `/v1`. These apps add `/v1/messages` themselves. Claude Code: `ANTHROPIC_BASE_URL=http://127.0.0.1:8080` |
 | OpenAI Responses API (Codex CLI) | `http://127.0.0.1:8080/v1/responses` ([setup](docs/DETAILS.md#the-responses-api-and-codex-cli)) |
+| ACP editors (Zed / JetBrains) via [acp-bridge](https://github.com/BlakeHung/acp-bridge) | `http://127.0.0.1:8080/v1` ([setup](docs/DETAILS.md#using-it)) |
 
 `strata connect` prints the exact settings for OpenCode, Codex CLI, Claude Code, oh-my-pi, pi, Hermes Agent and OpenClaw.
 `strata connect opencode --write` writes the file after asking and keeps a backup.
